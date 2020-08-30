@@ -20,6 +20,7 @@ export default createGlobalStyle`
         --color-mainLighter: ${props => props.theme.colors.mainLighter};
         --color-text: ${props => props.theme.colors.text};
         --color-white: ${props => props.theme.colors.white};
+        --color-errorRed: ${props => props.theme.colors.errorRed};
         --shadow: ${props => props.theme.shadow};
 
         @media ${props => props.theme.mediaQueries.small} {

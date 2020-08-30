@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import Logo from '../../Logo/Logo';
 import NavItems from '../NavItems/NavItems';
-import Container from '../../../hoc/layout/elements/Container';
+import {Container} from '../../../hoc/layout/elements';
 
 const FixedWrapper = styled.div`
     position: fixed;
