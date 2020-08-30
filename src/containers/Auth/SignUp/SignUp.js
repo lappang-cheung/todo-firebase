@@ -1,11 +1,21 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
+import styled from 'styled-components';
 
 import { FormWrapper, StyledForm } from '../../../hoc/layout/elements';
 import Input from '../../../components/UI/Forms/Input/Input';
 import Button from '../../../components/UI/Forms/Button/Button';
 import Heading from '../../../components/UI/Headings/Heading';
+import Message from '../../../components/UI/Message/Message';
+
+import * as actions from '../../../store/actions';
+
+const MessageWrapper = styled.div`
+  position: absolute;
+  bottom: 0;
+`;
 
 const SignUpSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -20,13 +30,14 @@ const SignUpSchema = Yup.object().shape({
     .email('Invalid email.')
     .required('The email is required.'),
   password: Yup.string()
-    .required('The passoword is required.'),
+    .required('The passoword is required.')
+    .min(8, 'The password is too short'),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('password'), null], 'Password does not match')
     .required('You need to confirm your password.'),
 });
 
-const SignUp = () => {
+const SignUp = ({ signUp, loading, error }) => {
   return (
     <Formik
       initialValues={{
@@ -37,8 +48,9 @@ const SignUp = () => {
         confirmPassword: ''
       }}
       validationSchema={SignUpSchema}
-      onSubmit={(values, { setSubmitting }) => {
-        console.log(values);
+      onSubmit={async (values, { setSubmitting }) => {
+        await signUp(values);
+        setSubmitting(false);
       }}
     >
       {({ isSubmitting, isValid }) => (
@@ -75,14 +87,24 @@ const SignUp = () => {
               component={Input}
             />
             <Field
-              type="confirmPassword"
+              type="password"
               name="confirmPassword"
               placeholder="Your confirm password..."
               component={Input}
             />
-            <Button disabled={!isValid} type="submit">
-              Login
+
+            <Button 
+              disabled={!isValid || isSubmitting} 
+              loading={loading ? 'Registering...' : null} 
+              type="submit"
+            >
+              Register
             </Button>
+            <MessageWrapper>
+              <Message error show={error}>
+                {error}
+              </Message>
+            </MessageWrapper>
           </StyledForm>
         </FormWrapper>
       )}
@@ -90,4 +112,13 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+const mapStateToProps = ({ auth }) => ({
+  loading: auth.loading,
+  error: auth.error
+})
+
+const mapDispatchToProps = {
+  signUp: actions.signUp
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
