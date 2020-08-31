@@ -27,6 +27,12 @@ export default (state = initialState, {type, payload}) => {
                 ...state,
                 error: false
             }
+        case actions.CLEAN_UP:
+            return {
+                ...state,
+                error: null, 
+                loading: false
+            }
         default:
             return state;
     }
