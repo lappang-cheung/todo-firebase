@@ -1,4 +1,10 @@
 import * as actions from '../actions/actionTypes';
+
+// Clean up messages
+export const clean = () => ({
+    type: actions.CLEAN_UP
+})
+
 // Sign up
 export const signUp = (data) => async(dispatch, getState, {getFirebase, getFirestore}) => {
     const firebase = getFirebase();
@@ -51,11 +57,6 @@ export const signOut = () => async(dispatch, getState, {getFirebase}) => {
     dispatch({ type: actions.AUTH_END})
 }
 
-// Clean up messages
-export const clean = () => ({
-    type: actions.CLEAN_UP
-})
-
 // Verify email
 export const verifyEmail = () => async(dispatch, getState, {getFirebase}) => {
     const firebase = getFirebase();
@@ -67,4 +68,17 @@ export const verifyEmail = () => async(dispatch, getState, {getFirebase}) => {
     }catch(err) {
         dispatch({ type: actions.VERIFY_FAIL, payload: err.message })
     }
-}
+};
+
+// Recovering Password
+export const recoverPassword = data => async(dispatch, getState, {getFirebase}) => {
+    const firebase = getFirebase();
+    dispatch({ type: actions.RECOVERY_START });
+    
+    try{
+        await firebase.auth().sendPasswordResetEmail(data.email);
+        dispatch({ type: actions.RECOVERY_SUCCESS });
+    }catch(err) {
+        dispatch({ type: actions.RECOVERY_FAIL, payload: err.message });
+    }
+};

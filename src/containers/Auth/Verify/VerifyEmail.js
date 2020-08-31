@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { connect } from 'react-redux';
 
 import {FormWrapper} from '../../../hoc/layout/elements';
@@ -8,7 +8,14 @@ import Message from '../../../components/UI/Message/Message';
 
 import * as actions from '../../../store/actions'
 
-const VerifyEmail = ({ sendVerification, error, loading }) => {
+const VerifyEmail = ({ sendVerification, error, loading, cleanUp }) => {
+
+    useEffect(() => {
+        return () => {
+            cleanUp()
+        }
+    }, [cleanUp])
+
     return (
         <FormWrapper>
             <Heading color="white" size="h1">
@@ -38,6 +45,7 @@ const mapStateToProps = ({auth}) => ({
 
 const mapDispatchToProps = {
     sendVerification: actions.verifyEmail,
+    cleanUp: actions.clean
 }
 
 

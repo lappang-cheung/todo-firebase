@@ -70,7 +70,7 @@ const Login = ({ login, loading, error, cleanUp }) => {
               loading={loading ? 'Logging in...' : null} 
               type="submit"
             >
-              Register
+              Login
             </Button>
             <MessageWrapper>
               <Message error show={error}>
