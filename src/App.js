@@ -3,17 +3,27 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Layout from './hoc/layout/Layout';
-import Home from './containers/Home/Home';
 import Todos from './containers/Todos/Todos';
 import Login from './containers/Auth/Login/Login';
 import SignUp from './containers/Auth/SignUp/SignUp';
 import Logout from './containers/Auth/Logout/Logout';
+import verifyEmail from './containers/Auth/Verify/VerifyEmail';
 
-const App = ({ loggedIn }) => {
+const App = ({ loggedIn, emailVerified }) => {
 
     let routes;
-    console.log(loggedIn)
-    if(loggedIn) {
+
+    if(loggedIn && !emailVerified ) {
+        routes = (
+            <Switch>
+                <Route exact path='/verify-email' component={verifyEmail} />
+                <Route exact path='/logout' component={Logout} />
+                <Redirect to='/verify-email' />
+            </Switch>
+        )
+    }
+
+    else if(loggedIn && emailVerified) {
         routes = (
             <Switch>
                 <Route exact path='/' component={Todos} />
@@ -35,7 +45,8 @@ const App = ({ loggedIn }) => {
 }
 
 const mapStateToProps = ({ firebase }) => ({
-    loggedIn: firebase.auth.uid
+    loggedIn: firebase.auth.uid,
+    emailVerified: firebase.auth.emailVerified
 })
 
 export default connect(mapStateToProps)(App);

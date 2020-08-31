@@ -3,10 +3,15 @@ import * as actions from '../actions/actionTypes';
 const initialState = {
     error: null,
     loading: false,
+    verifyEmail: {
+        error: null,
+        loading: false
+    },
 }
 
 export default (state = initialState, {type, payload}) => {
     switch (type) {
+        // User Actions
         case actions.AUTH_START:
             return {
                 ...state,
@@ -32,6 +37,33 @@ export default (state = initialState, {type, payload}) => {
                 ...state,
                 error: null, 
                 loading: false
+            }
+        // Verify Email
+        case actions.VERIFY_START: 
+            return {
+                ...state,
+                verifyEmail: {
+                    ...state.verifyEmail,
+                    loading: true
+                }
+            }
+        case actions.VERIFY_SUCCESS:
+            return {
+                ...state,
+                verifyEmail: {
+                    ...state.verifyEmail,
+                    loading: false,
+                    error: false
+                }
+            }
+        case actions.VERIFY_FAIL:
+            return {
+                ...state,
+                verifyEmail: {
+                    ...state.verifyEmail,
+                    loading: false,
+                    error: payload
+                }
             }
         default:
             return state;
