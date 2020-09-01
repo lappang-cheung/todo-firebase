@@ -10,6 +10,8 @@ import Button from '../../../components/UI/Forms/Button/Button';
 import Heading from '../../../components/UI/Headings/Heading';
 import Message from '../../../components/UI/Message/Message';
 
+import * as actions from '../../../store/actions'
+
 const ProfileSchema = Yup.object().shape({
     firstName: Yup.string()
       .required('The first name is required')
@@ -25,10 +27,9 @@ const ProfileSchema = Yup.object().shape({
     password: Yup.string()
       .min(8, 'The password is too short'),
     confirmPassword: Yup.string().when('password', {
-        is: password => password.length > 0,
+        is: password => password,
         then: Yup.string()
         .oneOf([Yup.ref('password'), null], 'Password does not match')
-        .required('You need to confirm your password.')
     })
 });
 
@@ -37,7 +38,7 @@ const MessageWrapper = styled.div`
   bottom: 0;
 `;
 
-const Profile = ({ firebase }) => {
+const Profile = ({ firebase, editProfile, loading, error }) => {
     if(!firebase.profile.isLoaded) return null;
     return (
         <Formik
@@ -50,7 +51,7 @@ const Profile = ({ firebase }) => {
             }}
             validationSchema={ProfileSchema}
             onSubmit={async (values, { setSubmitting }) => {
-                // await signUp(values);
+                await editProfile(values);
                 setSubmitting(false);
             }}
         >
@@ -96,15 +97,20 @@ const Profile = ({ firebase }) => {
 
                 <Button 
                     disabled={!isValid || isSubmitting} 
-                    // loading={loading ? 'Registering...' : null} 
+                    loading={loading ? 'Editing...' : null} 
                     type="submit"
                 >
                     Edit
                 </Button>
                 <MessageWrapper>
-                    {/* <Message error show={error}>
+                    <Message error show={error}>
                         {error}
-                    </Message> */}
+                    </Message>
+                </MessageWrapper>
+                <MessageWrapper>
+                    <Message success show={error === false}>
+                        Profile was updated!
+                    </Message>
                 </MessageWrapper>
             </StyledForm>
             </FormWrapper>
@@ -113,13 +119,15 @@ const Profile = ({ firebase }) => {
     )
 }
 
-const mapStateToProps = ({ firebase }) => ({
-    firebase
+const mapStateToProps = ({ firebase, auth }) => ({
+    firebase,
+    loading: auth.profileEdit.loading,
+    error: auth.profileEdit.error
 })
 
 const mapDispatchToProps = {
-    
+    editProfile: actions.editProfile
 }
 
 
-export default connect(mapStateToProps)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

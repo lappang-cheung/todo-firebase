@@ -10,6 +10,10 @@ const initialState = {
     recoverPassword: {
         error: null,
         loading: false
+    },
+    profileEdit: {
+        error: null,
+        loading: false
     }
 }
 
@@ -27,6 +31,11 @@ export default (state = initialState, {type, payload}) => {
                     error: null
                 },
                 recoverPassword: {
+                    ...state.recoverPassword,
+                    loading: false,
+                    error: null
+                },
+                profileEdit: {
                     ...state.recoverPassword,
                     loading: false,
                     error: null
@@ -103,6 +112,33 @@ export default (state = initialState, {type, payload}) => {
                 ...state,
                 recoverPassword: {
                     ...state.recoverPassword,
+                    loading: false,
+                    error: payload
+                }
+            }
+        // Edit Profile
+        case actions.PROFILE_EDIT_START:
+            return {
+                ...state,
+                profileEdit: {
+                    ...state.profileEdit,
+                    loading: true
+                }
+            }
+        case actions.PROFILE_EDIT_SUCCESS:
+            return {
+                ...state,
+                profileEdit: {
+                    ...state.profileEdit,
+                    loading: false,
+                    error: false
+                }
+            }
+        case actions.PROFILE_EDIT_FAIL:
+            return {
+                ...state,
+                profileEdit: {
+                    ...state.profileEdit,
                     loading: false,
                     error: payload
                 }
