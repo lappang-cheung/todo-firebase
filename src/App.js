@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -10,10 +10,37 @@ import Logout from './containers/Auth/Logout/Logout';
 import verifyEmail from './containers/Auth/Verify/VerifyEmail';
 import RecoverPassword from './containers/Auth/RecoverPassword/RecoverPassword';
 import Profile from './containers/Auth/Profile/Profile';
+import firebase from './Firebase/Firebase'
 
 const App = ({ loggedIn, emailVerified }) => {
 
+    useEffect(() => {
+        console.log('i have ran')
+        console.log(window.location.href)
+        confirmSignIn()
+    }, [])
+
+    const confirmSignIn = () => {
+        if(firebase.auth().isSignInWithEmailLink(window.location.href)) {
+            let email = window.localStorage.getItem('emailForSignIn')
+            if(!email){
+                email = window.prompt('Please provide your email email for confirmation')
+            }
+            firebase.auth().signInWithEmailLink(email, window.location.href)
+            .then((result) => {
+                window.localStorage.removeItem('emailForSignIn')
+                console.log(result)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        }
+    }
+
     let routes;
+
+    console.log(loggedIn)
+    console.log(emailVerified)
 
     if(loggedIn && !emailVerified ) {
         routes = (
@@ -40,7 +67,10 @@ const App = ({ loggedIn, emailVerified }) => {
                 <Route exact path='/login' component={Login} />
                 <Route exact path='/signup' component={SignUp} />
                 <Route exact path='/recover' component={RecoverPassword} />
-                <Redirect to='/login' />
+                {
+                    // Redirect check for logout
+                    window.location.href.includes("/logout") && <Redirect to='/login' />
+                }
             </Switch>
         )
     }

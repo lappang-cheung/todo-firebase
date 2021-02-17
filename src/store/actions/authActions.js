@@ -31,6 +31,23 @@ export const signUp = (data) => async(dispatch, getState, {getFirebase, getFires
 
     dispatch({ type: actions.AUTH_END })
 }
+
+export const signInPasswordless = (data) => async(dispatch, getState, {getFirebase}) => {
+    const firebase = getFirebase()
+    try{
+        await firebase.auth().sendSignInLinkToEmail(data.email, {
+            url: "http://localhost:3000",
+            handleCodeInApp: true
+        }).then(() => {
+            window.localStorage.setItem('emailForSignIn', data.email)
+        })
+        dispatch({ type: actions.AUTH_START })
+    } catch(err) {
+        dispatch({ type: actions.AUTH_FAIL, payload: err.message })
+    }
+    dispatch({ type: actions.AUTH_END})
+}
+
 // Sign in
 export const signIn = (data) => async(dispatch, getState, {getFirebase}) => {
     const firebase = getFirebase()
