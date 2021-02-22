@@ -17,12 +17,21 @@ export const addTodo = data => async(dispatch, getState, { getFirestore }) => {
             todo: data.todo
         }
 
-        firestore
-            .collection('todos')
-            .doc(userId)
-            .update({
-            todos: [...res.data().todos, newTodo]
-        })
+        if(!res.data()) {
+            firestore
+                .collection('todos')
+                .doc(userId)
+                .set({
+                todos: [newTodo]
+            })
+        } else {
+            firestore
+                .collection('todos')
+                .doc(userId)
+                .update({
+                todos: [...res.data().todos, newTodo]
+            })
+        }
 
         dispatch({ type: actions.ADD_TODO_SUCCESS })
         return true
