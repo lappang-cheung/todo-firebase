@@ -49,7 +49,7 @@ const Todos = ({ todos, requesting, requested, userId }) => {
             </Content>
     } else {
         content = <Content>
-            {todos[userId].todos.map((todo) => {
+            {todos[userId].todos.slice(0).reverse().map((todo) => {
                 return <Todo key={todo.id} todo={todo} />
             })}
         </Content>
