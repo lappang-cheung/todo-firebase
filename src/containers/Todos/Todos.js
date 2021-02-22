@@ -1,12 +1,13 @@
-import React from 'react'
+import React, {useState} from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { firestoreConnect } from 'react-redux-firebase'
 
 import Heading from '../../components/UI/Headings/Heading'
+import Button from '../../components/UI/Forms/Button/Button'
 import { Container } from '../../hoc/layout/elements'
-import AddTodo from './AddTodo/AddTodo'
+import InputTodo from './InputTodo/InputTodo'
 import Loader from '../../components/UI/Loader/Loader'
 import Todo from './Todo/Todo'
 
@@ -36,11 +37,13 @@ const Content = styled.div`
 
 const Todos = ({ todos, requesting, requested, userId }) => {
 
+    const [isAdding, setIsAdding] = useState(false)
+
     let content
 
     if(!todos) {
         content = <Loader />
-    } else if(!todos[userId] && requested[`todos/${userId}`]) {
+    } else if(!todos[userId] && requested[`todos/${userId}`] || todos[userId].todos.length === 0) {
         content = <Content>
                 <Heading color='white' size='h2'>You have no todos!</Heading>
             </Content>
@@ -63,7 +66,10 @@ const Todos = ({ todos, requesting, requested, userId }) => {
                     <Heading bold size="h4" color="white">
                         All you have to do for now...
                     </Heading>
-                    <AddTodo />
+                    <Button color='main' contain onClick={() => setIsAdding(true)}>
+                        Add Todo
+                    </Button>
+                    <InputTodo opened={isAdding} close={() => setIsAdding(false)}/>
                     { content }
                 </InnerWrapper>
             </Container>

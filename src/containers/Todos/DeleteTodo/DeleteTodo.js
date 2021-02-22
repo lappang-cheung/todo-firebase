@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import Modal from '../../../components/UI/Modal/Modal'
 import Button from '../../../components/UI/Forms/Button/Button'
 import Heading from '../../../components/UI/Headings/Heading'
+import Message from '../../../components/UI/Message/Message'
 
 import * as actions from '../../../store/actions'
 
@@ -22,8 +23,14 @@ const TodoWrapper = styled.div`
     text-align: center;
 `
 
+const MessageWrapper = styled.div`
+  position: absolute;
+  bottom: 2rem;
+  width: 100%;
+  padding: 0 3rem;
+`;
 
-const DeleteTodo = ({ show, close, todo, deleteTodo }) => {
+const DeleteTodo = ({ show, close, todo, deleteTodo, error, loading }) => {
     return (
         <Modal opened={show} close={close}>
             <Heading noMargin size="h1" color="white">
@@ -41,8 +48,8 @@ const DeleteTodo = ({ show, close, todo, deleteTodo }) => {
                     color="red"
                     type="submit"
                     onClick={() => deleteTodo(todo.id)}
-                    // disabled={loading}
-                    // loading={loading ? 'Deleting...' : null}
+                    disabled={loading}
+                    loading={loading ? 'Deleting...' : null}
                 >
                     Delete
                 </Button>
@@ -50,12 +57,18 @@ const DeleteTodo = ({ show, close, todo, deleteTodo }) => {
                     Cancel
                 </Button>
             </ButtonsWrapper>
+            <MessageWrapper>
+                <Message error show={error}>
+                    {error}
+                </Message>
+            </MessageWrapper>
         </Modal>
     )
 }
 
-const mapStateToProps = (state) => ({
-    
+const mapStateToProps = ({ todos }) => ({
+    error: todos.deleteTodo.error,
+    loading: todos.deleteTodo.loading
 })
 
 const mapDispatchToProps = {
