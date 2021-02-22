@@ -20,3 +20,7 @@ export const PROFILE_EDIT_FAIL = 'PROFILE_EDIT_FAIL';
 // Delete Profile
 export const DELETE_START = 'DELETE_START';
 export const DELETE_FAIL = 'DELETE_FAIL';
+// Add Todos
+export const ADD_TODO_START = 'ADD_TODO_START';
+export const ADD_TODO_SUCCESS = 'ADD_TODO_SUCESS';
+export const ADD_TODO_FAIL = 'ADD_TODO_FAIL';
