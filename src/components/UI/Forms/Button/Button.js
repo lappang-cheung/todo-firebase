@@ -9,9 +9,14 @@ const StyledButton = styled.button`
   color: var(--color-white);
   font-weight: 700;
   box-shadow: 0rem 0.5rem 3.5rem var(--shadow);
-  background-color: var(--color-mainLighter);
+  background-color: ${({color}) => {
+    if (color === 'red') return 'var(--color-errorRed)';
+    else if (color === 'main') return 'var(--color-mainDark)';
+    else return 'var(--color-mainLighter)';
+  }};
   border: none;
   transition: all 0.2s;
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-3px);

@@ -74,7 +74,7 @@ const AddTodo = ({ addTodo, loading, error }) => {
                             placeholder="Your todo..."
                             component={Input}
                         />
-                         <ButtonsWrapper>
+                        <ButtonsWrapper>
                             <Button
                                 contain
                                 color="main"
